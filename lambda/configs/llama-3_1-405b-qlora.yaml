@@ -12,7 +12,7 @@ datasets:
 
 dataset_prepared_path: /home/ubuntu/ml-1cc/axolotl/last_run_prepared
 val_set_size: 0.0
-output_dir: /home/ubuntu/ml-1cc/axolotl/outputs/qlora-llama3_1-405b-finetome
+output_dir: /home/ubuntu/ml-1cc/axolotl-artifacts/outputs/qlora-llama3_1-405b-finetome
 save_safetensors: true
 
 adapter: qlora

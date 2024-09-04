@@ -1,5 +1,4 @@
 base_model: meta-llama/Meta-Llama-3.1-405B
-# /home/ubuntu/ml-1cc/.cache/huggingface/hub/Meta-Llama-3.1-405B-Instruct
 tokenizer_type: AutoTokenizer
 
 strict: false
@@ -12,7 +11,7 @@ datasets:
 
 dataset_prepared_path: /home/ubuntu/ml-1cc/axolotl/last_run_prepared
 val_set_size: 0.0
-output_dir: /home/ubuntu/ml-1cc/axolotl/outputs/llama3_1-405b-finetome
+output_dir: /home/ubuntu/ml-1cc/axolotl-artifacts/outputs/llama3_1-405b-finetome
 save_safetensors: false  # saving final sharded dict may not work with safetensors
 
 wandb_project: llama-3.1-405b-fft-finetome
