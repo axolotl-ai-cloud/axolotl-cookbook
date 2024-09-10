@@ -16,9 +16,9 @@ datasets:
     type: chat_template
     split: train
 
-dataset_prepared_path: /home/ubuntu/ml-1cc/axolotl/last_run_prepared
+dataset_prepared_path: $PATH_STORAGE/axolotl/last_run_prepared
 val_set_size: 0.0
-output_dir: /home/ubuntu/ml-1cc/axolotl-artifacts/outputs/llama3_1-70b-finetome
+output_dir: $PATH_STORAGE/axolotl-artifacts/outputs/llama3_1-70b-finetome
 save_safetensors: false  # saving final sharded dict may not work with safetensors
 
 wandb_project: llama-3.1-70b-fft-finetome

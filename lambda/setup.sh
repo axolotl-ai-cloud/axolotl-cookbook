@@ -1,7 +1,15 @@
 #!/bin/bash
 
+# Check if the argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <path_storage>"
+  exit 1
+fi
+
 # Exit immediately if a command exits with a non-zero status
 set -e
+
+PATH_STORAGE=$1
 
 # Check if Miniconda is already installed
 if [ ! -d "/home/ubuntu/miniconda3" ]; then
@@ -46,9 +54,9 @@ sudo apt-get install -y vim curl nano rsync s3fs net-tools nvtop infiniband-diag
 # Add ubuntu user to root group
 sudo usermod -aG root ubuntu
 
-mkdir -p /home/ubuntu/ml-1cc/axolotl-artifacts/{configs,outputs}
+mkdir -p ${PATH_STORAGE}/axolotl-artifacts/{configs,outputs}
 # Clone axolotl repository
-CLONE_DIR=/home/ubuntu/ml-1cc/axolotl
+CLONE_DIR=${PATH_STORAGE}/axolotl
 if [ ! -d "$CLONE_DIR" ]; then
     git clone --single-branch https://github.com/axolotl-ai-cloud/axolotl.git $CLONE_DIR
 fi
@@ -71,8 +79,8 @@ if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
 fi' >> ~/.bashrc
 
 # Create huggingface cache directory and set environment variables
-mkdir -p /home/ubuntu/ml-1cc/.cache/huggingface
-echo 'export HF_HOME="/home/ubuntu/ml-1cc/.cache/huggingface"' >> ~/.bashrc
+mkdir -p ${PATH_STORAGE}/.cache/huggingface
+echo "export HF_HOME=\"${PATH_STORAGE}/.cache/huggingface\"" >> ~/.bashrc
 echo 'export HF_HUB_ENABLE_HF_TRANSFER="1"' >> ~/.bashrc
 echo 'export PATH="/home/ubuntu/miniconda3/envs/pytorch/bin:/home/ubuntu/miniconda3/bin:/home/ubuntu/miniconda3/condabin:/home/ubuntu/.local/bin:/usr/lib/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"' >> ~/.bashrc
 echo 'export LD_LIBRARY_PATH="/usr/lib/cuda/lib64"' >> ~/.bashrc
