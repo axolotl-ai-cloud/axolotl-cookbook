@@ -1,0 +1,68 @@
+base_model: Qwen/Qwen2.5-0.5B-Instruct
+# Automatically upload checkpoint and final model to HF
+# hub_model_id: username/custom_model_name
+
+load_in_8bit: false
+load_in_4bit: false
+strict: false
+
+torch_compile: false
+
+rl: grpo
+trl:
+  beta: 0.001
+  use_vllm: false
+  reward_funcs:
+    - r1_grpo_code.strict_format_reward_func
+    - r1_grpo_code.correctness_reward_func
+  num_generations: 2
+  max_completion_length: 100
+  use_liger_loss: true
+
+chat_template: qwen_25
+datasets:
+  - path: TIGER-Lab/AceCode-87K
+    type: r1_grpo_code.axolotl_acecode_transform
+    
+# dataset_prepared_path: /workspace/data/last_run_prepared
+dataset_processes:
+skip_prepare_dataset: true
+val_set_size: 0.0
+output_dir: ./outputs/grpo
+
+# dataloader_prefetch_factor: 32
+# dataloader_num_workers: 2
+# dataloader_pin_memory: true
+
+gc_steps: 1
+sequence_len: 256
+sample_packing: false
+eval_sample_packing: false
+pad_to_sequence_len: false
+
+gradient_accumulation_steps: 1
+micro_batch_size: 2
+num_epochs: 1
+
+optimizer: adamw_torch_fused
+lr_scheduler: constant_with_warmup
+learning_rate: 1.0e-6
+max_grad_norm: 1.0
+
+train_on_inputs: false
+group_by_length: false
+float32: true
+fp16: false
+tf32: false
+
+gradient_checkpointing: false
+early_stopping_patience:
+resume_from_checkpoint:
+local_rank:
+logging_steps: 1
+xformers_attention: false
+flash_attention: false
+
+warmup_steps: 100
+evals_per_epoch: 1
+saves_per_epoch: 4
