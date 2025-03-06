@@ -132,7 +132,7 @@ def correctness_reward_func(completions: list[list[dict]], answers: list[list[st
             ["assert fn() == test_case_zero", "assert fn() == test_case_one", ...]
 
     """
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     # let's extract the correct fn name from the first element of the answers
     # i.e. the text after assert and before () and also not including anything after ()
     correct_fn_names = [answers[0].split("(")[0].split(" ")[1] for answers in answers]
@@ -187,6 +187,18 @@ def strict_format_reward_func(completions, **kwargs) -> list[float]:
     responses = [completion[0]["content"] for completion in completions]
     matches = [re.match(pattern, r) for r in responses]
     return [0.5 if match else 0.0 for match in matches]
+
+
+def soft_format_reward_func(completions, **kwargs) -> list[float]:
+    """
+    Reward function that loosely checks if the completion has a specific format,
+    without penalizing adherence to newlines.
+    """
+    pattern = r"<reasoning>.*?</reasoning>\s?<answer>.*?</answer>"
+    responses = [completion[0]["content"] for completion in completions]
+    matches = [re.match(pattern, r, re.S) for r in responses]
+    return [0.25 if match else 0.0 for match in matches]
+
 
 def count_xml(text) -> float:
     count = 0.0

@@ -1,4 +1,4 @@
-base_model: Qwen/Qwen2.5-0.5B-Instruct
+base_model: Qwen/Qwen2.5-1.5B-Instruct
 # Automatically upload checkpoint and final model to HF
 # hub_model_id: username/custom_model_name
 
@@ -11,12 +11,13 @@ torch_compile: false
 rl: grpo
 trl:
   beta: 0.001
-  use_vllm: false
+  use_vllm: true
+  vllm_gpu_memory_utilization: 0.8
   reward_funcs:
-    - r1_grpo_code.strict_format_reward_func
+    - r1_grpo_code.soft_format_reward_func
     - r1_grpo_code.correctness_reward_func
-  num_generations: 2
-  max_completion_length: 100
+  num_generations: 16
+  max_completion_length: 512
   use_liger_loss: true
 
 chat_template: qwen_25
@@ -24,44 +25,44 @@ datasets:
   - path: TIGER-Lab/AceCode-87K
     type: r1_grpo_code.axolotl_acecode_transform
     
-# dataset_prepared_path: /workspace/data/last_run_prepared
+dataset_prepared_path: /workspace/data/last_run_prepared
 dataset_processes:
 skip_prepare_dataset: true
 val_set_size: 0.0
-output_dir: ./outputs/grpo
+output_dir: /workspace/data/axolotl-artifacts/r1-outputs
 
-# dataloader_prefetch_factor: 32
-# dataloader_num_workers: 2
-# dataloader_pin_memory: true
+dataloader_prefetch_factor: 32
+dataloader_num_workers: 2
+dataloader_pin_memory: true
 
 gc_steps: 1
-sequence_len: 256
+sequence_len: 800
 sample_packing: false
 eval_sample_packing: false
 pad_to_sequence_len: false
 
-gradient_accumulation_steps: 1
-micro_batch_size: 2
+gradient_accumulation_steps: 2
+micro_batch_size: 16
 num_epochs: 1
 
-optimizer: adamw_torch_fused
+optimizer: paged_adamw_32bit
 lr_scheduler: constant_with_warmup
 learning_rate: 1.0e-6
 max_grad_norm: 1.0
 
 train_on_inputs: false
 group_by_length: false
-float32: true
-fp16: false
-tf32: false
 
-gradient_checkpointing: false
+bf16: true
+tf32: true
 early_stopping_patience:
 resume_from_checkpoint:
 local_rank:
 logging_steps: 1
-xformers_attention: false
-flash_attention: false
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+flash_attention: true
 
 warmup_steps: 100
 evals_per_epoch: 1
