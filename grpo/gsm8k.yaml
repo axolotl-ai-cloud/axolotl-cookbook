@@ -9,17 +9,20 @@ strict: false
 torch_compile: true
 
 rl: grpo
+vllm:
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.2
 trl:
-  beta: 0.001
-  max_completion_length: 512
   use_vllm: true
+  vllm_mode: colocate
+  beta: 0.0
+  max_completion_length: 512
   reward_funcs:
     - gsm8k_grpo.correctness_reward_func
     - gsm8k_grpo.int_reward_func
     - gsm8k_grpo.strict_format_reward_func
     - gsm8k_grpo.soft_format_reward_func
     - gsm8k_grpo.xmlcount_reward_func
-  vllm_gpu_memory_utilization: 0.9
   vllm_max_model_len: 800
   num_generations: 16
 
